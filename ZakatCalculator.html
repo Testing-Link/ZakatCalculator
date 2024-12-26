@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zakat Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a2a44;
+            color: #e0e0e0;
+            margin: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #444;
+            border-radius: 10px;
+            background-color: #2c3e50;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-container {
+            width: 48%;
+        }
+        .info-container {
+            width: 48%;
+            background-color: #34495e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #goldGrams, #silverGrams, #debts{
+            display: none;
+        }
+		.warning-text {
+            color: red;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 15px;
+		}
+        .footer {
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+			 }
+        .info-section {
+            margin-top: 20px;
+        }
+        .info-content {
+            display: none;
+            background-color: #34495e;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .info-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Zakat Form Section -->
+        <div class="form-container">
+            <h2>Zakat Calculator</h2>
+
+            <!-- Currency Selection -->
+            <label for="currency">Select Currency:</label>
+            <select id="currency">
+                <option value="USD">USD</option>
+                <option value="SAR">SAR</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+            </select>
+
+            <!-- Input for Wealth in Monetary Units -->
+            <label for="wealth">Enter Your Wealth (in selected currency):</label>
+            <input type="number" id="wealth" placeholder="Enter your total wealth" min="0" step="0.01">
+
+            <!-- Hidden Input for Debts -->
+            <input type="number" id="debts" min="0" step="0.01">
+
+            <!-- Input for Immediate Bills -->
+            <label for="bills">Enter Your Immediate Bills (in selected currency):</label>
+            <input type="number" id="bills" placeholder="Enter your immediate bills" min="0" step="0.01">
+			<div class="warning-text"><i>* You must pay your bills before your Zakat.</i></div>
+
+            <!-- Hidden Input for Gold in Grams -->
+            <input type="number" id="goldGrams" value="0" step="0.01">
+
+            <!-- Hidden Input for Silver in Grams -->
+            <input type="number" id="silverGrams" value="0" step="0.01">
+
+            <!-- Zakat Due Display -->
+            <label for="zakat">Zakat Due:</label>
+            <input type="text" id="zakat" placeholder="Enter your values" readonly>
+
+            <button onclick="calculateZakat()">Calculate Zakat</button>
+
+            <!-- Zakat Payment Indicator -->
+            <div class="footer">
+                You have one lunar (Hijri) year to pay your zakat.
+            </div>
+        </div>
+<!-- Information Section about Zakat -->
+<div class="info-container">
+    <button id="toggleButton" onclick="toggleContent()">Learn About the Math Behind Zakat</button>
+
+    <!-- Importance of Zakat Content -->
+    <div id="importanceContent" class="info-content active">
+        <h3>Importance of Zakat</h3>
+        <p>
+            Zakat is one of the five pillars of Islam, and it serves as a means of purifying wealth by redistributing it to those in need. It is obligatory for Muslims who have a certain amount of wealth, and it ensures that wealth does not circulate solely among the rich. By giving zakat, you help support the poor, the orphans, the needy, and those in debt. It is a form of charity that strengthens community bonds and promotes social justice.
+        </p>
+        <h4>What is Zakat Used For?</h4>
+        <p>Zakat is used to support various causes including:</p>
+        <ul>
+            <li>Providing assistance to the poor and needy.</li>
+            <li>Supporting orphans and widows.</li>
+            <li>Helping those in debt to relieve their burdens.</li>
+            <li>Funding community development projects.</li>
+            <li>Providing resources for those in hardship due to natural disasters or other crises.</li>
+        </ul>
+        <p>
+            By paying zakat, you contribute to the betterment of society and fulfill an essential religious duty.
+        </p>
+    </div>
+
+    <!-- Math Behind Zakat Content -->
+    <div id="mathContent" class="info-content">
+        <h3>Math Behind Zakat Calculation</h3>
+        <p>
+            Zakat is calculated based on your total wealth minus your liabilities multiplied by 2.5%. 
+            You must pay 2.5% of your wealth if it exceeds the Nisab threshold, which can be calculated either based on the value of gold or silver.
+        </p>
+        <p><b>Formula: Zakat = (Total Wealth - Bills) * 2.5%</b></p>
+        <p>
+            For example, if your wealth exceeds the Nisab and is worth $10,000, and you have $50 worth in bills the calculation would be:
+        </p>
+        <p><b>Zakat = ($10,000 - $50) * 2.5% = $9950 * 2.5% = $248.75</b></p>
+		 <p>
+                Additionally, if you have gold or silver, their value is also considered, although this calculator doesn't take inputs of it. If the value of your gold or silver exceeds the Nisab threshold, it is included in the total wealth calculation for zakat.
+            </p>
+            <p>
+                The Nisab threshold is typically based on a certain amount of gold or silver, and it varies slightly depending on the type of metal you are using.
+            </p>
+    </div>
+</div>
+
+<script>
+    function toggleContent() {
+        const toggleButton = document.getElementById("toggleButton");
+        const importanceContent = document.getElementById("importanceContent");
+        const mathContent = document.getElementById("mathContent");
+
+        if (mathContent.classList.contains("active")) {
+            mathContent.classList.remove("active");
+            importanceContent.classList.add("active");
+            toggleButton.textContent = "Learn About the Math Behind Zakat";
+        } else {
+            importanceContent.classList.remove("active");
+            mathContent.classList.add("active");
+            toggleButton.textContent = "Learn About the Importance Behind Zakat";
+        }
+    }
+	
+        // Exchange rates for each currency (to USD)
+        const exchangeRates = {
+            USD: 1,       // Base currency
+            SAR: 3.75,    // 1 USD = 3.75 SAR
+            EUR: 0.92,    // 1 USD = 0.92 EUR
+            GBP: 0.82     // 1 USD = 0.82 GBP
+        };
+
+        // Gold and Silver rates per gram in USD for each currency
+        const rates = {
+            USD: { gold: 55.0, silver: 0.70 },
+            SAR: { gold: 206.0, silver: 2.63 },
+            EUR: { gold: 51.0, silver: 0.63 },
+            GBP: { gold: 42.0, silver: 0.53 }
+        };
+
+        // Nisab values in grams
+        const nisabGoldGrams = 87.48;  // Nisab in grams of gold
+        const nisabSilverGrams = 612.36;  // Nisab in grams of silver
+
+        function calculateZakat() {
+            const currency = document.getElementById("currency").value;
+            const wealth = parseFloat(document.getElementById("wealth").value) || 0;
+            const debts = parseFloat(document.getElementById("debts").value) || 0;
+            const bills = parseFloat(document.getElementById("bills").value) || 0;
+
+            // Convert wealth to USD equivalent if monetary value is entered
+            let totalWealth = 0;
+            let zakatDue = 0;
+
+            // Step 1: Calculate total wealth considering monetary value, debts, and bills
+            if (wealth > 0) {
+                const exchangeRate = exchangeRates[currency];
+                const wealthInUSD = wealth / exchangeRate;
+
+                totalWealth = wealthInUSD - bills;
+            }
+
+            // Step 2: Convert gold and silver to the selected currency and check if they exceed Nisab
+            let goldEquivalent = 0;
+            let silverEquivalent = 0;
+
+            const goldRate = rates[currency].gold;
+            const silverRate = rates[currency].silver;
+
+            // Step 3: Check if gold or silver exceed Nisab and convert if applicable
+            const goldGrams = parseFloat(document.getElementById("goldGrams").value) || 0;
+            const silverGrams = parseFloat(document.getElementById("silverGrams").value) || 0;
+
+            if (goldGrams >= nisabGoldGrams) {
+                goldEquivalent = goldGrams * goldRate;
+            } else {
+                goldEquivalent = 0;
+            }
+
+            if (silverGrams >= nisabSilverGrams) {
+                silverEquivalent = silverGrams * silverRate;
+            } else {
+                silverEquivalent = 0;
+            }
+
+            // Step 4: Combine wealth, gold, and silver values
+            let combinedWealth = totalWealth + goldEquivalent + silverEquivalent;
+
+            // Step 5: If combined wealth exceeds or equals Nisab, calculate zakat
+            if (combinedWealth >= nisabGoldGrams * goldRate || combinedWealth >= nisabSilverGrams * silverRate) {
+                // If above Nisab, calculate Zakat on the **original wealth** input (before conversion)
+                zakatDue = (wealth - bills ) * 0.025; // Zakat is 2.5% of the original wealth input
+            } else if (goldGrams >= nisabGoldGrams || silverGrams >= nisabSilverGrams) {
+                // If there is no wealth input and gold/silver exceeds the Nisab:
+                // Zakat is 2.5% of the converted gold/silver value
+                zakatDue = (goldEquivalent + silverEquivalent) * 0.025;
+            }
+
+            // Step 6: Display Zakat due in selected currency
+            const zakatField = document.getElementById("zakat");
+
+            if (zakatDue > 0) {
+                zakatField.value = `${zakatDue.toFixed(2)} ${currency}`;
+            } else {
+                zakatField.value = `No Zakat Due`;
+            }
+        }
+    </script>
+</body>
+</html>
